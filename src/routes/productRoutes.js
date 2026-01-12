@@ -1,3 +1,4 @@
+//src/routes/productRoutes.js
 import { Router } from "express";
 import { list, create, getOne, update, remove } from "../controllers/product.controller.js";
 import { authenticateJWT } from "../middleware/authenticateJWT.js";

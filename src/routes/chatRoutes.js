@@ -1,3 +1,4 @@
+//src/routes/chatRoutes.js
 import { Router } from "express";
 import { authenticateJWT } from "../middleware/authenticateJWT.js";
 

@@ -1,3 +1,4 @@
+//src/server.js
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
@@ -7,6 +8,15 @@ import "dotenv/config";
 import path from "path";
 import { fileURLToPath } from "url";
 import jwt from "jsonwebtoken";
+
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
+import jwt from "jsonwebtoken";
+
+import { typeDefs } from "./graphql/schema.js";
+import { resolvers } from "./graphql/resolvers.js";
+
 
 import { connectDB } from "./config/db.js";
 import apiRouter from "./routes/index.js";
@@ -20,6 +30,41 @@ const users = new Map();
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
+
+// --- Apollo GraphQL /graphql conviviendo con Express ---
+app.set("io", io);
+
+const gqlServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+});
+
+await gqlServer.start();
+
+app.use(
+  "/graphql",
+  cors(),
+  express.json(),
+  expressMiddleware(gqlServer, {
+    context: async ({ req }) => {
+      const auth = req.headers.authorization || "";
+      const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+      let user = null;
+
+      if (token) {
+        try {
+          user = jwt.verify(token, process.env.JWT_SECRET); // { id, email, role }
+        } catch {
+          user = null;
+        }
+      }
+
+      return { user, io: app.get("io") };
+    },
+  })
+);
+
 
 // Static frontend (src/public)
 const __filename = fileURLToPath(import.meta.url);

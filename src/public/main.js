@@ -1,3 +1,4 @@
+//src/public/main.js
 const API = "http://localhost:4000/api";
 const $ = (id) => document.getElementById(id);
 const out = $("auth-out");

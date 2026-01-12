@@ -1,3 +1,4 @@
+//src/controllers/product.controller.js
 import Product from "../models/Product.js";
 
 export async function list(_req, res) {

@@ -1,3 +1,4 @@
+//src/middleware/authenticateJWT.js
 import jwt from "jsonwebtoken";
 
 export function authenticateJWT(requiredRole) {
