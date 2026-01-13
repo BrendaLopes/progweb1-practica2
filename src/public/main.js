@@ -60,7 +60,7 @@ function initAuthPage() {
         localStorage.setItem("token", data.token);
         // migrateGuestCartToUser(); // si lo quieres
         updateStatusChip();
-        location.href = "/"; // o "/home.html" si tu home real es ese
+        location.href = "shop.html"; 
       }
 
       if (out) out.textContent = JSON.stringify(data, null, 2);
@@ -82,7 +82,7 @@ function initAuthPage() {
         localStorage.setItem("token", data.token);
         // migrateGuestCartToUser();
         updateStatusChip();
-        location.href = "/"; // o "/home.html"
+        location.href = "shop.html"; 
       }
 
       if (out) out.textContent = JSON.stringify(data, null, 2);

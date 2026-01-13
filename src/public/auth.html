@@ -9,57 +9,56 @@
 <body>
   <div id="navbar"></div>
 
-  <header class="topbar">
-    <div class="brand">
-      <h1>Bienvenido a ProgWeb Shop</h1>
-    </div>
-    <a class="ghost-link" href="https://github.com/dperezalvarez?tab=repositories" target="_blank" rel="noreferrer">Ver repositorios ↗</a>
-  </header>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">🛍️</span>
+    <h1>ProgWeb Shop</h1>
+  </div>
+
+  <a class="ghost-link" href="home.html">Volver</a>
+</header>
+
 
   <main class="container">
-    <section class="card">
-      <div class="card-header">
-        <h2>🔐 Iniciar sesión / Registrarse</h2>
-        <span class="chip" id="status-chip">offline</span>
-      </div>
+    <section class="card auth-card">
+  <div class="card-header">
+    <h2>Accede a tu cuenta</h2>
+    <span class="chip" id="status-chip">offline</span>
+  </div>
 
-      <form id="auth-form">
-        <div class="field">
-          <label for="name">Nombre Completo</label>
-          <input id="name" type="text" required />
-        </div>
+  <form id="auth-form" class="grid-2">
+    <div class="field">
+      <label for="name">Nombre</label>
+      <input id="name" type="text" placeholder="Tu nombre completo" />
+    </div>
 
-        <div class="field">
-          <label for="email">Correo Electrónico</label>
-          <input id="email" type="email" required />
-        </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="correo@ejemplo.com" />
+    </div>
 
-        <div class="field">
-          <label for="pass">Contraseña</label>
-          <input id="pass" type="password" required />
-        </div>
+    <div class="field">
+      <label for="pass">Contraseña</label>
+      <input id="pass" type="password" placeholder="••••••••" />
+    </div>
 
-        <div class="field">
-          <label for="role">Rol</label>
-          <select id="role" required>
-            <option value="user">Usuario</option>
-            <option value="admin">Administrador</option>
-          </select>
-        </div>
+    <div class="field">
+      <label for="role">Rol</label>
+      <select id="role">
+        <option value="user">Usuario</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+  </form>
 
-        <div class="actions">
-          <button id="btn-register" class="btn primary" type="button">Crear cuenta</button>
-          <button id="btn-login" class="btn" type="button">Iniciar sesión</button>
-        </div>
-      </form>
+  <div class="actions">
+    <button id="btn-register" class="btn primary">Crear cuenta</button>
+    <button id="btn-login" class="btn">Iniciar sesión</button>
+  </div>
 
-      <div class="actions">
-        <a class="btn subtle" href="shop.html">Ir a la tienda 🛍️</a>
-        <a class="btn subtle" href="chat.html">Ir al chat 💬</a>
-      </div>
+  <pre id="auth-out" class="console"></pre>
+</section>
 
-      <pre id="auth-out" class="console"></pre>
-    </section>
   </main>
 
   <footer class="footer">

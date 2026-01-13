@@ -7,33 +7,42 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo">💬</span>
-      <h1>Chat — ProgWeb I</h1>
-    </div>
-    <a class="ghost-link" href="home.html">← Volver</a>
-  </header>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">💬</span>
+    <h1>Chat general</h1>
+  </div>
+
+  <div class="actions">
+    <span class="chip" id="user-count">0 usuarios</span>
+    <a class="btn subtle" href="home.html">Salir</a>
+  </div>
+</header>
 
   <main class="container">
     <section class="card chat-card">
-      <div class="card-header">
-        <div class="actions" style="margin: 0 0 10px 0;">
-            <button id="enable-sound" class="btn subtle">🔊 Activar sonido</button>
-        </div>
-        <h2>Canal general</h2>
-        <span class="chip" id="user-count">Usuarios conectados: 0</span>
-      </div>
+  <div class="card-header">
+    <h2>Canal general</h2>
 
-      <div id="chat" class="chat-box"></div>
+    <div class="actions" style="margin:0">
+      <button id="enable-sound" class="btn subtle">🔊 Activar sonido</button>
+    </div>
+  </div>
 
-      <div id="typing" class="typing"></div>
+  <div id="chat" class="chat-box"></div>
 
-      <div class="chat-input">
-        <input id="msg" placeholder="Escribe un mensaje…" autocomplete="off" />
-        <button id="send" class="btn primary">Enviar ↵</button>
-      </div>
-    </section>
+  <div id="typing" class="typing"></div>
+
+  <div class="chat-input">
+    <input
+      id="msg"
+      placeholder="Escribe un mensaje y pulsa Enter…"
+      autocomplete="off"
+    />
+    <button id="send" class="btn primary">➤</button>
+  </div>
+</section>
+
   </main>
 
   <audio id="notif" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_67bfe4b48d.mp3?filename=notification-3-18399.mp3"></audio>

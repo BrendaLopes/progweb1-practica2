@@ -34,28 +34,31 @@
     const isAdmin = role() === "admin";
 
     mount.innerHTML = `
-      <header class="topbar">
-        <div class="brand">
-          <a class="brand-link" href="/">🛍️ ProgWeb Shop</a>
-        </div>
+<header class="topbar">
+  <div class="nav-left">
+    <a class="brand-link" href="/">
+      <span class="logo">⚡</span>
+      <span class="brand-name">Energy Market</span>
+    </a>
+  </div>
 
-        <nav class="nav">
-          <a class="nav-link" href="/shop.html">Tienda</a>
-          <a class="nav-link" href="/cart.html">Carrito</a>
-          <a class="nav-link" href="/chat.html">Chat</a>
+  <nav class="nav-center">
+    <a class="nav-link" href="/shop.html">Tienda</a>
+    <a class="nav-link" href="/cart.html">Carrito</a>
+    <a class="nav-link" href="/chat.html">Chat</a>
+    ${logged ? `<a class="nav-link" href="/account.html">Mi cuenta</a>` : ``}
+    ${logged && isAdmin ? `<a class="nav-link admin" href="/admin.html">Admin</a>` : ``}
+  </nav>
 
-          ${logged ? `<a class="nav-link" href="/account.html">Mi cuenta</a>` : ``}
-          ${logged && isAdmin ? `<a class="nav-link" href="/admin.html">Admin</a>` : ``}
+  <div class="nav-right">
+    ${logged
+      ? `<button class="btn subtle" id="btn-logout">Salir <span class="user">(${escapeHtml(username())})</span></button>`
+      : `<a class="btn primary" href="/auth.html">Login / Registro</a>`
+    }
+  </div>
+</header>
+`;
 
-          <span class="nav-sep"></span>
-
-          ${logged
-            ? `<button class="btn subtle" id="btn-logout">Salir (${escapeHtml(username())})</button>`
-            : `<a class="btn primary" href="/auth.html">Entrar / Registrarse</a>`
-          }
-        </nav>
-      </header>
-    `;
 
     const btn = document.getElementById("btn-logout");
     if (btn) {

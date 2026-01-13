@@ -3,23 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tienda</title>
+  <title>Tienda — ProgWeb</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <div id="navbar"></div>
 
   <main class="container">
     <section class="card">
       <div class="card-header">
-        <h2>Productos</h2>
-        <span class="chip" id="cart-chip">Carrito: 0</span>
+        <h2>🛍️ Catálogo</h2>
+        <span class="chip ok" id="cart-chip">Carrito: 0</span>
       </div>
-      <ul id="list" class="list"></ul>
+
+      <ul id="list" class="product-grid"></ul>
     </section>
   </main>
 
-  <footer class="footer"><small>© Brenda Lopes — ProgWeb I</small></footer>
+  <footer class="footer">
+    <small>© Brenda Lopes — ProgWeb I</small>
+  </footer>
 
   <script src="navbar.js"></script>
   <script type="module" src="shop.js"></script>

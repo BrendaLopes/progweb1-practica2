@@ -1,20 +1,27 @@
 import { gql } from "./graphql.js";
-import { addToCart, getCart } from "./cart.js";
+import { addToCart, cartCount } from "./cart.js";
 
 const list = document.getElementById("list");
 const chip = document.getElementById("cart-chip");
 
+// 1) Esta página es “tienda completa”: requiere login
+const token = localStorage.getItem("token");
+if (!token) {
+  alert("Debes iniciar sesión para acceder a la tienda.");
+  location.href = "auth.html";
+}
+
 function updateCartChip() {
-  const n = getCart().reduce((a, i) => a + i.quantity, 0);
-  chip.textContent = `Carrito: ${n}`;
+  chip.textContent = `Carrito: ${cartCount()}`;
 }
 
 async function loadProducts() {
+  // products NO necesita auth en tus resolvers (no requiere ctx.user)
   const data = await gql(`
     query {
       products { id name price desc }
     }
-  `, {}, { auth: true });
+  `);
 
   list.innerHTML = data.products.map((p) => `
     <li>
@@ -32,9 +39,9 @@ async function loadProducts() {
     const id = e.target.getAttribute("data-add");
     if (!id) return;
     const p = data.products.find((x) => x.id === id);
-    addToCart(p);
+
+    addToCart(p, { requireAuth: true });
     updateCartChip();
-    alert("Añadido al carrito");
   };
 
   updateCartChip();
