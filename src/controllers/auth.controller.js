@@ -1,23 +1,24 @@
-//src/controllers/auth.controller.js
+// src/controllers/auth.controller.js
+
+
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const sign = (user) =>
-  jwt.sign(
-    { id: user._id, email: user.email, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES || "2d" }
-  );
+// Crear un token
+const sign = (user) => jwt.sign(
+  { id: user._id, email: user.email, role: user.role },
+  process.env.JWT_SECRET,
+  { expiresIn: process.env.JWT_EXPIRES || "2d" }
+);
 
+// Registrar usuario
 export async function register(req, res) {
   try {
     const { name, email, password, role = "user" } = req.body;
-    
+
     // Verificar si el rol es admin y si el usuario autenticado es admin
     if (role === "admin") {
-      if (!req.user || req.user.role !== "admin") {
-        return res.status(403).json({ error: "Solo los administradores pueden crear otros administradores" });
-      }
+      return res.status(403).json({ error: "Solo los administradores pueden crear otros administradores" });
     }
 
     const exists = await User.findOne({ email });
@@ -33,6 +34,8 @@ export async function register(req, res) {
   }
 }
 
+// Iniciar sesión
+
 export async function login(req, res) {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -46,3 +49,5 @@ export async function login(req, res) {
     user: { id: user._id, name: user.name, email: user.email, role: user.role },
   });
 }
+
+

@@ -23,7 +23,6 @@
         <span class="chip" id="status-chip">offline</span>
       </div>
 
-      <!-- Formulario de autenticación -->
       <form id="auth-form">
         <div class="field">
           <label for="name">Nombre Completo</label>
@@ -48,10 +47,9 @@
           </select>
         </div>
 
-        <!-- Botones de acción -->
         <div class="actions">
-          <button id="btn-register" class="btn primary">Crear cuenta</button>
-          <button id="btn-login" class="btn">Iniciar sesión</button>
+          <button id="btn-register" class="btn primary" type="button">Crear cuenta</button>
+          <button id="btn-login" class="btn" type="button">Iniciar sesión</button>
         </div>
       </form>
 
@@ -68,17 +66,7 @@
     <small>© Brenda Lopes — ProgWeb I</small>
   </footer>
 
-  <script>
-    const chip = document.getElementById('status-chip');
-    const setChip = () => {
-      const hasToken = !!localStorage.getItem('token');
-      chip.textContent = hasToken ? 'online' : 'offline';
-      chip.classList.toggle('ok', hasToken);
-    };
-    setChip();
-    window.addEventListener('storage', setChip);
-  </script>
-
+  <!-- SOLO el módulo -->
   <script type="module" src="main.js"></script>
 </body>
 </html>
