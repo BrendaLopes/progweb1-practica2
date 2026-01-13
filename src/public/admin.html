@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><h1>🛠️ Admin</h1></div>
+    <div class="actions" style="margin:0">
+      <a class="btn subtle" href="shop.html">Tienda</a>
+      <a class="btn subtle" href="chat.html">Chat</a>
+      <a class="btn subtle" href="index.html">Auth</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-header">
+        <h2>Usuarios</h2>
+      </div>
+      <div class="actions">
+        <button class="btn" id="btn-users">Cargar usuarios</button>
+      </div>
+      <ul id="users" class="list"></ul>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Pedidos</h2>
+        <select id="filter" class="btn">
+          <option value="">Todos</option>
+          <option value="PENDING">En curso (Pending)</option>
+          <option value="COMPLETED">Comprado (Completed)</option>
+        </select>
+      </div>
+      <div class="actions">
+        <button class="btn" id="btn-orders">Cargar pedidos</button>
+      </div>
+      <ul id="orders" class="list"></ul>
+      <pre id="detail" class="console"></pre>
+    </section>
+  </main>
+
+  <footer class="footer"><small>© Brenda Lopes — ProgWeb I</small></footer>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

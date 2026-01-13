@@ -1,22 +1,19 @@
 //src/server.js
+import "dotenv/config";
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
-import "dotenv/config";
 import path from "path";
 import { fileURLToPath } from "url";
 import jwt from "jsonwebtoken";
 
 import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@apollo/server/express4";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
-import jwt from "jsonwebtoken";
+import { expressMiddleware } from "@as-integrations/express4";
 
 import { typeDefs } from "./graphql/schema.js";
 import { resolvers } from "./graphql/resolvers.js";
-
 
 import { connectDB } from "./config/db.js";
 import apiRouter from "./routes/index.js";
@@ -36,8 +33,7 @@ app.set("io", io);
 
 const gqlServer = new ApolloServer({
   typeDefs,
-  resolvers,
-  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  resolvers
 });
 
 await gqlServer.start();
@@ -71,7 +67,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PUBLIC_DIR = path.join(__dirname, "public");
 app.use(express.static(PUBLIC_DIR));
-app.get("/", (_req, res) => res.sendFile(path.join(PUBLIC_DIR, "index.html")));
+
+// Home real
+app.get("/", (_req, res) => res.sendFile(path.join(PUBLIC_DIR, "home.html")));
+
+// Auth
+app.get("/auth", (_req, res) => res.sendFile(path.join(PUBLIC_DIR, "auth.html")));
 
 // API
 app.use("/api", apiRouter);

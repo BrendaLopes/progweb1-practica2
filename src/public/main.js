@@ -1,6 +1,8 @@
-//src/public/main.js
+import { migrateGuestCartToUser } from "./cart.js";
+
 const API = "http://localhost:4000/api";
 const $ = (id) => document.getElementById(id);
+
 const out = $("auth-out");
 const list = $("list");
 
@@ -9,8 +11,13 @@ const getToken = () => localStorage.getItem("token") || "";
 const hasToken = () => !!getToken();
 
 function parseJWT(token) {
-  try { return JSON.parse(atob(token.split(".")[1])); } catch { return null; }
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch {
+    return null;
+  }
 }
+
 function isLoggedIn() {
   const t = getToken();
   if (!t) return false;
@@ -21,10 +28,12 @@ function isLoggedIn() {
   }
   return !!p;
 }
+
 function isAdmin() {
   const p = parseJWT(getToken());
   return !!p && p.role === "admin";
 }
+
 function requireToken() {
   const t = getToken();
   if (!t) throw new Error("Login primero");
@@ -40,8 +49,15 @@ function requireToken() {
 async function api(path, { method = "GET", body, auth = false } = {}) {
   const headers = { "Content-Type": "application/json" };
   if (auth) headers.Authorization = `Bearer ${requireToken()}`;
-  const r = await fetch(`${API}${path}`, { method, headers, body: body ? JSON.stringify(body) : undefined });
+
+  const r = await fetch(`${API}${path}`, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
   if (r.status === 204) return null;
+
   const data = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(data?.error || `Error ${r.status}`);
   return data;
@@ -56,69 +72,99 @@ $("btn-register").onclick = async () => {
       password: $("pass").value,
       role: $("role").value,
     };
+
     const data = await api("/auth/register", { method: "POST", body });
-    if (data.token) localStorage.setItem("token", data.token);
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      migrateGuestCartToUser();
+    }
+
     out.textContent = JSON.stringify(data, null, 2);
     updateStatusChip();
-  } catch (e) { alert(e.message); }
+  } catch (e) {
+    alert(e.message);
+  }
 };
 
 $("btn-login").onclick = async () => {
   try {
-    const body = { email: $("email").value.trim(), password: $("pass").value };
+    const body = {
+      email: $("email").value.trim(),
+      password: $("pass").value,
+    };
+
     const data = await api("/auth/login", { method: "POST", body });
-    if (data.token) localStorage.setItem("token", data.token);
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      migrateGuestCartToUser();
+    }
+
     out.textContent = JSON.stringify(data, null, 2);
     updateStatusChip();
-  } catch (e) { alert(e.message); }
+  } catch (e) {
+    alert(e.message);
+  }
 };
 
-// opcional: botón de logout si lo añades en el HTML con id="btn-logout"
 const btnLogout = document.getElementById("btn-logout");
 if (btnLogout) {
   btnLogout.onclick = () => {
     localStorage.removeItem("token");
-    list.innerHTML = "";
-    out.textContent = "";
+    if (list) list.innerHTML = "";
+    if (out) out.textContent = "";
     updateStatusChip();
   };
 }
 
 function updateStatusChip() {
   const chip = document.getElementById("status-chip");
+  if (!chip) return;
+
   const on = isLoggedIn();
   chip.textContent = on ? "online" : "offline";
   chip.classList.toggle("ok", on);
-  // desactiva acciones si no hay token
-  $("btn-load").disabled = !on;
-  $("btn-new").disabled = !on;
+
+  const btnLoad = document.getElementById("btn-load");
+  const btnNew = document.getElementById("btn-new");
+  if (btnLoad) btnLoad.disabled = !on;
+  if (btnNew) btnNew.disabled = !on;
 }
 
-// =================== PRODUCTOS (todo PRIVADO) ====================
+// =================== PRODUCTOS (privado) ====================
 async function loadProducts() {
   try {
-    const items = await api("/products", { auth: true }); // requiere token
+    const items = await api("/products", { auth: true });
     renderProducts(items);
-  } catch (e) { alert(e.message); }
+  } catch (e) {
+    alert(e.message);
+  }
 }
 
 function renderProducts(items) {
   const admin = isAdmin();
-  list.innerHTML = items.map((p) => `
+  list.innerHTML = items
+    .map(
+      (p) => `
 <li>
   <div>
     <strong>${escapeHtml(p.name)}</strong> — ${Number(p.price).toFixed(2)}€
     ${p.desc ? `<div class="muted">${escapeHtml(p.desc)}</div>` : ""}
   </div>
-  ${admin ? `
-    <div class="actions">
-      <button class="btn" data-edit="${p._id}">Editar</button>
-      <button class="btn" data-del="${p._id}">Borrar</button>
-    </div>` : ``}
-</li>`).join("");
+  ${
+    admin
+      ? `<div class="actions">
+          <button class="btn" data-edit="${p._id}">Editar</button>
+          <button class="btn" data-del="${p._id}">Borrar</button>
+        </div>`
+      : ``
+  }
+</li>`
+    )
+    .join("");
 }
 
-// Delegación de eventos para editar / borrar
 list.addEventListener("click", async (e) => {
   const editId = e.target.getAttribute("data-edit");
   const delId = e.target.getAttribute("data-del");
@@ -127,61 +173,88 @@ list.addEventListener("click", async (e) => {
     if (!isAdmin()) return alert("Debes ser admin para editar");
     try {
       const current = await api(`/products/${editId}`, { auth: true });
-      const name = prompt("Nombre", current.name); if (name == null) return;
-      const priceStr = prompt("Precio", String(current.price)); if (priceStr == null) return;
-      const price = Number(priceStr); if (Number.isNaN(price)) return alert("Precio inválido");
+      const name = prompt("Nombre", current.name);
+      if (name == null) return;
+
+      const priceStr = prompt("Precio", String(current.price));
+      if (priceStr == null) return;
+
+      const price = Number(priceStr);
+      if (Number.isNaN(price)) return alert("Precio inválido");
+
       const desc = prompt("Descripción", current.desc || "") ?? "";
 
-      await api(`/products/${editId}`, { method: "PUT", auth: true, body: { name, price, desc } });
+      await api(`/products/${editId}`, {
+        method: "PUT",
+        auth: true,
+        body: { name, price, desc },
+      });
+
       await loadProducts();
       alert("Producto actualizado");
-    } catch (err) { alert(err.message); }
+    } catch (err) {
+      alert(err.message);
+    }
     return;
   }
 
   if (delId) {
     if (!isAdmin()) return alert("Debes ser admin para borrar");
     try {
-      const ok = confirm("¿Seguro que quieres borrar el producto?"); if (!ok) return;
+      const ok = confirm("¿Seguro que quieres borrar el producto?");
+      if (!ok) return;
+
       await api(`/products/${delId}`, { method: "DELETE", auth: true });
       await loadProducts();
       alert("Producto eliminado");
-    } catch (err) { alert(err.message); }
+    } catch (err) {
+      alert(err.message);
+    }
   }
 });
 
-// crear producto
 $("btn-new").onclick = async () => {
   if (!isAdmin()) return alert("Debes ser admin para crear productos");
   try {
-    const name = prompt("Nombre del producto"); if (!name) return;
-    const priceStr = prompt("Precio"); const price = Number(priceStr);
+    const name = prompt("Nombre del producto");
+    if (!name) return;
+
+    const priceStr = prompt("Precio");
+    const price = Number(priceStr);
     if (Number.isNaN(price)) return alert("Precio inválido");
+
     const desc = prompt("Descripción") || "";
+
     await api("/products", { method: "POST", auth: true, body: { name, price, desc } });
     await loadProducts();
     alert("Producto creado");
-  } catch (e) { alert(e.message); }
+  } catch (e) {
+    alert(e.message);
+  }
 };
 
-// bind del botón cargar
 $("btn-load").onclick = () => {
   if (!hasToken()) return alert("Inicia sesión para ver productos");
   loadProducts();
 };
 
-// proteger enlace al chat desde el index
 const chatLink = document.querySelector('a[href="chat.html"]');
 if (chatLink) {
   chatLink.addEventListener("click", (e) => {
-    if (!hasToken()) { e.preventDefault(); alert("Debes iniciar sesión para entrar al chat"); }
+    if (!hasToken()) {
+      e.preventDefault();
+      alert("Debes iniciar sesión para entrar al chat");
+    }
   });
 }
 
 function escapeHtml(s) {
   return String(s)
-    .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 // init

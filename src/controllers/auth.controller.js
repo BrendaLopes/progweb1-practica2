@@ -12,6 +12,14 @@ const sign = (user) =>
 export async function register(req, res) {
   try {
     const { name, email, password, role = "user" } = req.body;
+    
+    // Verificar si el rol es admin y si el usuario autenticado es admin
+    if (role === "admin") {
+      if (!req.user || req.user.role !== "admin") {
+        return res.status(403).json({ error: "Solo los administradores pueden crear otros administradores" });
+      }
+    }
+
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ error: "Email ya registrado" });
 

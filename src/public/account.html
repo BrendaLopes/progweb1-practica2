@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mi cuenta</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-header">
+        <h2>👤 Mi cuenta</h2>
+      </div>
+      <div id="user-info" class="muted"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>📦 Mis pedidos</h2>
+      </div>
+      <ul id="orders" class="list"></ul>
+      <pre id="detail" class="console"></pre>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>© Brenda Lopes — ProgWeb I</small>
+  </footer>
+
+  <script src="navbar.js"></script>
+  <script type="module" src="account.js"></script>
+</body>
+</html>

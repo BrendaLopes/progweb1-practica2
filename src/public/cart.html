@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Carrito</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-header">
+        <h2>Tu carrito</h2>
+        <span class="chip" id="total">Total: 0€</span>
+      </div>
+
+      <ul id="items" class="list"></ul>
+
+      <div class="actions">
+        <button id="btn-buy" class="btn primary">Finalizar compra</button>
+        <button id="btn-clear" class="btn">Vaciar</button>
+      </div>
+
+      <pre id="out" class="console"></pre>
+    </section>
+  </main>
+
+  <footer class="footer"><small>© Brenda Lopes — ProgWeb I</small></footer>
+
+  <script src="navbar.js"></script>
+  <script type="module" src="cartPage.js"></script>
+</body>
+</html>

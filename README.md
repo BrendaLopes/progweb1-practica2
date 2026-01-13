@@ -1,33 +1,43 @@
-# Práctica 1 — ProgWeb I  
-**Autora:** Brenda Lopes  
-**Profesor:** Daniel Pérez  
-**Asignatura:** Programación Web I  
-**Curso:** 2025  
+## Arranque
+1) npm i
+2) crear .env con:
+   MONGO_URI=...
+   JWT_SECRET=...
+   JWT_EXPIRES=2d
+3) npm run dev
+4) Abrir:
+   - http://localhost:4000/ (auth)
+   - http://localhost:4000/shop.html (tienda)
+   - http://localhost:4000/cart.html (carrito)
+   - http://localhost:4000/admin.html (panel admin)
+   - http://localhost:4000/graphql (playground)
 
----
+## GraphQL (schema)
+Types: Product, Order, OrderItem, User
+Queries:
+- products
+- product(id)
+- orders(status)
+- order(id)
+Mutations:
+- createOrder(input)
+- updateOrderStatus(id,status)
 
-## Objetivo de la práctica
+## Ejemplos
+### Obtener productos
+query { products { id name price desc } }
 
-Desarrollar una aplicación web completa con **frontend + backend + base de datos**, que integre:
+### Crear pedido
+mutation {
+  createOrder(input:{
+    items:[{productId:"ID", quantity:2}]
+  }){
+    id status total
+  }
+}
 
-- CRUD de productos conectado a MongoDB.
-- Sistema de usuarios con **registro**, **login** y **roles** (`user` / `admin`).
-- Autenticación segura con **JWT** (para rutas y sockets).
-- **Chat en tiempo real** entre usuarios autenticados.
-- Persistencia de datos en **MongoDB Atlas**.
-- Interfaz web en **HTML, CSS y JavaScript vanilla**.
+### Listar pedidos pendientes
+query { orders(status:PENDING){ id total status user{email} } }
 
----
-
-## Tecnologías utilizadas
-
-| Capa | Tecnología |
-|------|-------------|
-| **Frontend** | HTML5, CSS3, JavaScript (vanilla) |
-| **Backend** | Node.js + Express |
-| **Base de datos** | MongoDB (Atlas) |
-| **Comunicación en tiempo real** | Socket.IO |
-| **Autenticación** | JSON Web Tokens (JWT) |
-| **Otros** | Mongoose, bcrypt, morgan, cors, dotenv |
-
----
+### Cambiar estado (admin)
+mutation { updateOrderStatus(id:"ID", status:COMPLETED){ id status } }

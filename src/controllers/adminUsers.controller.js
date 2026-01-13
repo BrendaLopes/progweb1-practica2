@@ -1,3 +1,5 @@
+
+//controllers/adminUsers.controller.js
 import User from "../models/User.js";
 
 export async function listUsers(_req, res) {

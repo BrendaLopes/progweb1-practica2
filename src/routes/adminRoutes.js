@@ -1,3 +1,4 @@
+//src/routes/adminRoutes.js
 import { Router } from "express";
 import { authenticateJWT } from "../middleware/authenticateJWT.js";
 import { listUsers, updateUserRole, deleteUser } from "../controllers/adminUsers.controller.js";
